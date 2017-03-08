@@ -1,0 +1,81 @@
+Language model created by QuickLM on Tue Mar  7 13:09:00 EST 2017
+Copyright (c) 1996-2010 Carnegie Mellon University and Alexander I. Rudnicky
+
+The model is in standard ARPA format, designed by Doug Paul while he was at MITRE.
+
+The code that was used to produce this language model is available in Open Source.
+Please visit http://www.speech.cs.cmu.edu/tools/ for more information
+
+The (fixed) discount mass is 0.5. The backoffs are computed using the ratio method.
+This model based on a corpus of 13 sentences and 16 words
+
+\data\
+ngram 1=16
+ngram 2=27
+ngram 3=15
+
+\1-grams:
+-0.7999 </s> -0.3010
+-0.7999 <s> -0.2261
+-1.9138 ATRAS -0.2261
+-1.9138 BUSCAR -0.2903
+-1.9138 COLGAR -0.2261
+-1.6128 CONTACTO -0.2261
+-1.9138 LISTO -0.2261
+-1.9138 LLAMAR -0.2261
+-1.9138 MANDAR -0.2261
+-1.9138 MENSAJE -0.2261
+-1.9138 MODIFICAR -0.2261
+-1.9138 NUEVO -0.2903
+-1.9138 PASSWORD -0.2261
+-1.9138 SALIR -0.2261
+-1.9138 USERNAME -0.2261
+-1.9138 VIDEOLLAMADA -0.2261
+
+\2-grams:
+-1.4150 <s> ATRAS 0.0000
+-1.4150 <s> BUSCAR 0.0000
+-1.4150 <s> COLGAR 0.0000
+-1.4150 <s> LISTO 0.0000
+-1.4150 <s> LLAMAR 0.0000
+-1.4150 <s> MANDAR 0.0000
+-1.4150 <s> MENSAJE 0.0000
+-1.4150 <s> MODIFICAR 0.0000
+-1.4150 <s> NUEVO 0.0000
+-1.4150 <s> PASSWORD 0.0000
+-1.4150 <s> SALIR 0.0000
+-1.4150 <s> USERNAME 0.0000
+-1.4150 <s> VIDEOLLAMADA 0.0000
+-0.3010 ATRAS </s> -0.3010
+-0.3010 BUSCAR CONTACTO 0.0000
+-0.3010 COLGAR </s> -0.3010
+-0.3010 CONTACTO </s> -0.3010
+-0.3010 LISTO </s> -0.3010
+-0.3010 LLAMAR </s> -0.3010
+-0.3010 MANDAR </s> -0.3010
+-0.3010 MENSAJE </s> -0.3010
+-0.3010 MODIFICAR </s> -0.3010
+-0.3010 NUEVO CONTACTO 0.0000
+-0.3010 PASSWORD </s> -0.3010
+-0.3010 SALIR </s> -0.3010
+-0.3010 USERNAME </s> -0.3010
+-0.3010 VIDEOLLAMADA </s> -0.3010
+
+\3-grams:
+-0.3010 <s> ATRAS </s>
+-0.3010 <s> BUSCAR CONTACTO
+-0.3010 <s> COLGAR </s>
+-0.3010 <s> LISTO </s>
+-0.3010 <s> LLAMAR </s>
+-0.3010 <s> MANDAR </s>
+-0.3010 <s> MENSAJE </s>
+-0.3010 <s> MODIFICAR </s>
+-0.3010 <s> NUEVO CONTACTO
+-0.3010 <s> PASSWORD </s>
+-0.3010 <s> SALIR </s>
+-0.3010 <s> USERNAME </s>
+-0.3010 <s> VIDEOLLAMADA </s>
+-0.3010 BUSCAR CONTACTO </s>
+-0.3010 NUEVO CONTACTO </s>
+
+\end\
