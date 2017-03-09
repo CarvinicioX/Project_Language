@@ -22,11 +22,6 @@ public class voiceLauncher {
         configuration.setDictionaryPath("src/proyecto_lenguajes/comandos.dic");
         // Set path to the language model.
         configuration.setLanguageModelPath("src/proyecto_lenguajes/comandos.lm");
-        /*/ Set grammar path
-        configuration.setGrammarPath("src/grammar");
-        configuration.setGrammarName("grammar");
-        configuration.setUseGrammar(true);*/
-        
         //Recognizer Object, Pass the Configuration object
         LiveSpeechRecognizer recognize = new LiveSpeechRecognizer(configuration);
  
@@ -40,10 +35,10 @@ public class voiceLauncher {
         while ((result = recognize.getResult()) != null) {
             //Get the recognize speech
             String command = result.getHypothesis();
+            System.out.println(command);
             if (command.toLowerCase().equals("salir")) {
                 System.exit(0);
             }
-            System.out.println(command);
         }
     }
 }
