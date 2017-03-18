@@ -248,7 +248,7 @@ public class Principal extends javax.swing.JFrame {
         }
     }
 
-    public void addContact() {
+    public void addContactView() {
         if (this.contactsWindow.isVisible()) {
             this.newModifyContact.setVisible(true);
             this.contactsWindow.setVisible(false);

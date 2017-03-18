@@ -42,16 +42,18 @@ public class CommandRecognition extends Thread {
                     System.out.println("Password");
                 } else if (Command.toLowerCase().equals("listo")) {
                     Pantalla_Principal.generalListo();
+                    System.out.println("LogIn Succesfully");
                 } else if (Command.toLowerCase().equals("contactos")) {
                     Pantalla_Principal.openContacts();
-                    System.out.println("Contactos");
+                    System.out.println("Opening Contacts View");
                 } else if (Command.toLowerCase().equals("nuevo")) {
-                    Pantalla_Principal.addContact();
+                    Pantalla_Principal.addContactView();
+                    System.out.println("Opening New Contact View");
                 } else if (Command.toLowerCase().equals("sophia") || Command.toLowerCase().equals("jackson") || Command.toLowerCase().equals("emma") || Command.toLowerCase().equals("aiden") || Command.toLowerCase().equals("olivia") || Command.toLowerCase().equals("lucas") || Command.toLowerCase().equals("ava") || Command.toLowerCase().equals("liam") || Command.toLowerCase().equals("mia") || Command.toLowerCase().equals("noah") || Command.toLowerCase().equals("isabella") || Command.toLowerCase().equals("ethan") || Command.toLowerCase().equals("riley") || Command.toLowerCase().equals("mason") || Command.toLowerCase().equals("aria") || Command.toLowerCase().equals("caden") || Command.toLowerCase().equals("zoe") || Command.toLowerCase().equals("oliver") || Command.toLowerCase().equals("charlotte") || Command.toLowerCase().equals("elijah") || Command.toLowerCase().equals("lily") || Command.toLowerCase().equals("grayson") || Command.toLowerCase().equals("layla") || Command.toLowerCase().equals("jacob") || Command.toLowerCase().equals("amelia") || Command.toLowerCase().equals("michael") || Command.toLowerCase().equals("emily") || Command.toLowerCase().equals("benjamin") || Command.toLowerCase().equals("madelyn") || Command.toLowerCase().equals("carter") || Command.toLowerCase().equals("aubrey") || Command.toLowerCase().equals("james") || Command.toLowerCase().equals("adalyn") || Command.toLowerCase().equals("jayden") || Command.toLowerCase().equals("madison") || Command.toLowerCase().equals("logan") || Command.toLowerCase().equals("chloe") || Command.toLowerCase().equals("alexander") || Command.toLowerCase().equals("harper") || Command.toLowerCase().equals("caleb") || Command.toLowerCase().equals("abigail") || Command.toLowerCase().equals("ryan") || Command.toLowerCase().equals("luke") || Command.toLowerCase().equals("avery") || Command.toLowerCase().equals("daniel") || Command.toLowerCase().equals("evelyn") || Command.toLowerCase().equals("jack") || Command.toLowerCase().equals("kaylee") || Command.toLowerCase().equals("william")) {
                     Pantalla_Principal.setName(Command);
                     System.out.println("Name");
                 } else if (Command.toLowerCase().equals("salir")) {
-                    System.out.println("Good Bye");
+                    System.out.println("Exiting Process");
                     System.exit(0);
                 }
             }
