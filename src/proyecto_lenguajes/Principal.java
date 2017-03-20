@@ -20,12 +20,12 @@ public class Principal extends javax.swing.JFrame {
      * Creates new form main
      */
     public Principal()  {
-        initComponents();
-        this.setVisible(true);
         Contacts.add(new Contact(1, "SOPHIA", "95959595", new ImageIcon()));
         Users.add(new User(1, "SOPHIA", "SOPHIA"));
         CommandRecognition = new CommandRecognition(this);
         CommandRecognition.start();
+        initComponents();
+        this.setVisible(true);
     }
 
     /**
@@ -54,6 +54,12 @@ public class Principal extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         messageWindow = new javax.swing.JDialog();
         jLabel10 = new javax.swing.JLabel();
+        historyWindow = new javax.swing.JDialog();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel12 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        jLabel11 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -64,7 +70,6 @@ public class Principal extends javax.swing.JFrame {
 
         mainWindow.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         mainWindow.setMinimumSize(new java.awt.Dimension(480, 600));
-        mainWindow.setPreferredSize(new java.awt.Dimension(480, 600));
         mainWindow.setResizable(false);
         mainWindow.setSize(new java.awt.Dimension(480, 600));
         mainWindow.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -81,7 +86,6 @@ public class Principal extends javax.swing.JFrame {
         mainWindow.getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 480, 600));
 
         contactsWindow.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        contactsWindow.setPreferredSize(new java.awt.Dimension(480, 600));
         contactsWindow.setResizable(false);
         contactsWindow.setSize(new java.awt.Dimension(480, 600));
         contactsWindow.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -95,12 +99,16 @@ public class Principal extends javax.swing.JFrame {
 
         contactWindow.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         contactWindow.setResizable(false);
+        contactWindow.setSize(new java.awt.Dimension(480, 600));
         contactWindow.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/background.jpg"))); // NOI18N
         contactWindow.getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 480, 600));
 
         newModifyContact.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        newModifyContact.setPreferredSize(new java.awt.Dimension(480, 600));
+        newModifyContact.setResizable(false);
+        newModifyContact.setSize(new java.awt.Dimension(480, 600));
         newModifyContact.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/background.jpg"))); // NOI18N
@@ -108,6 +116,7 @@ public class Principal extends javax.swing.JFrame {
 
         callWindow.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         callWindow.setResizable(false);
+        callWindow.setSize(new java.awt.Dimension(480, 600));
         callWindow.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/background.jpg"))); // NOI18N
@@ -115,6 +124,7 @@ public class Principal extends javax.swing.JFrame {
 
         videoCallWindow.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         videoCallWindow.setResizable(false);
+        videoCallWindow.setSize(new java.awt.Dimension(480, 600));
         videoCallWindow.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/background.jpg"))); // NOI18N
@@ -122,10 +132,52 @@ public class Principal extends javax.swing.JFrame {
 
         messageWindow.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         messageWindow.setResizable(false);
+        messageWindow.setSize(new java.awt.Dimension(480, 600));
         messageWindow.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/background.jpg"))); // NOI18N
         messageWindow.getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 480, 600));
+
+        historyWindow.setPreferredSize(new java.awt.Dimension(480, 600));
+        historyWindow.setResizable(false);
+        historyWindow.setSize(new java.awt.Dimension(480, 600));
+        historyWindow.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel12.setFont(new java.awt.Font("URW Palladio L", 2, 100)); // NOI18N
+        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel12.setText("History");
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane2.setViewportView(jTextArea1);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2)
+                .addContainerGap())
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(31, 31, 31)
+                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 398, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(31, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        historyWindow.getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 460, 580));
+
+        jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/background.jpg"))); // NOI18N
+        historyWindow.getContentPane().add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 480, 600));
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -199,6 +251,10 @@ public class Principal extends javax.swing.JFrame {
         this.mainWindow.setVisible(false);
     }//GEN-LAST:event_ContactsLabelClickMouseClicked
 
+    public void load() {
+        
+    }
+
     public void usernameFocusCommand() {
         if (this.isVisible() && !this.logInUsername.isFocusOwner()) {
             this.logInUsername.requestFocusInWindow();
@@ -221,6 +277,14 @@ public class Principal extends javax.swing.JFrame {
             }
         } else if (this.newModifyContact.isVisible()) {
             
+        }
+    }
+
+    public void history() {
+        if (this.historyWindow.isVisible()) {
+            this.historyWindow.setVisible(false);
+        } else {
+            this.historyWindow.setVisible(true);
         }
     }
 
@@ -297,9 +361,12 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JDialog contactWindow;
     private javax.swing.JDialog contactsWindow;
     private javax.swing.JList contactsWindowContacts;
+    private javax.swing.JDialog historyWindow;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -309,7 +376,10 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField logInPassword;
     private javax.swing.JTextField logInUsername;
     private javax.swing.JDialog mainWindow;
