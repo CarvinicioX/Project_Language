@@ -1,10 +1,29 @@
 package proyecto_lenguajes;
 
+import com.github.sarxos.webcam.Webcam;
+import com.github.sarxos.webcam.WebcamPanel;
+import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
@@ -15,16 +34,28 @@ public class Principal extends javax.swing.JFrame {
     CommandRecognition CommandRecognition;
     ArrayList<Contact> Contacts = new ArrayList<>();
     ArrayList<User> Users = new ArrayList<>();
+    ArrayList<String> History = new ArrayList<>();
+    ArrayList<String> eMail = new ArrayList<>();
+    private Connection connection = null;
+    final Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+    JFrame window = new JFrame("VideoCall");
 
     /**
      * Creates new form main
      */
-    public Principal()  {
-        Contacts.add(new Contact(1, "SOPHIA", "95959595", new ImageIcon()));
-        Users.add(new User(1, "SOPHIA", "SOPHIA"));
+    public Principal() {
         CommandRecognition = new CommandRecognition(this);
         CommandRecognition.start();
+        load();
+    }
+
+    public void init() {
         initComponents();
+        System.out.println(this.History.size());
+        for (int i = 0; i < this.History.size(); i++) {
+            this.historyWindowText.append(this.History.get(i));
+        }
+        this.setLocation(dim.width / 2 - 240, dim.height / 2 - 300);
         this.setVisible(true);
     }
 
@@ -41,16 +72,34 @@ public class Principal extends javax.swing.JFrame {
         ContactsLabelClick = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         contactsWindow = new javax.swing.JDialog();
+        jLabel13 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         contactsWindowContacts = new javax.swing.JList();
         jLabel5 = new javax.swing.JLabel();
-        contactWindow = new javax.swing.JDialog();
-        jLabel6 = new javax.swing.JLabel();
         newModifyContact = new javax.swing.JDialog();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        newModifyContactName = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
+        newModifyContactNumber = new javax.swing.JTextField();
+        jLabel15 = new javax.swing.JLabel();
+        newModifyContactImage = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         callWindow = new javax.swing.JDialog();
+        jPanel5 = new javax.swing.JPanel();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
+        callWindowNumber = new javax.swing.JTextField();
+        callWindowName = new javax.swing.JTextField();
+        callWindowImage = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         videoCallWindow = new javax.swing.JDialog();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        videoCallWindowNumber = new javax.swing.JTextField();
+        videoCallWindowName = new javax.swing.JTextField();
+        videoCallWindowImage = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         messageWindow = new javax.swing.JDialog();
         jLabel10 = new javax.swing.JLabel();
@@ -58,8 +107,17 @@ public class Principal extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        historyWindowText = new javax.swing.JTextArea();
         jLabel11 = new javax.swing.JLabel();
+        mailWindow = new javax.swing.JDialog();
+        jPanel6 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        mailWindowBody = new javax.swing.JTextArea();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        mailWindowMails = new javax.swing.JTextArea();
+        jLabel21 = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
+        jLabel20 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -69,68 +127,196 @@ public class Principal extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
 
         mainWindow.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        mainWindow.setTitle("Home");
+        mainWindow.setLocation(dim.width/2-240, dim.height/2-300);
         mainWindow.setMinimumSize(new java.awt.Dimension(480, 600));
         mainWindow.setResizable(false);
         mainWindow.setSize(new java.awt.Dimension(480, 600));
         mainWindow.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         ContactsLabelClick.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/ic_contacts_black_48dp.png"))); // NOI18N
-        ContactsLabelClick.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                ContactsLabelClickMouseClicked(evt);
-            }
-        });
         mainWindow.getContentPane().add(ContactsLabelClick, new org.netbeans.lib.awtextra.AbsoluteConstraints(144, 204, 192, 192));
 
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/background.jpg"))); // NOI18N
         mainWindow.getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 480, 600));
 
         contactsWindow.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        contactsWindow.setTitle("Contactos");
+        contactsWindow.setLocation(dim.width/2-240, dim.height/2-300);
         contactsWindow.setResizable(false);
         contactsWindow.setSize(new java.awt.Dimension(480, 600));
         contactsWindow.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        jLabel13.setFont(new java.awt.Font("Old English Text MT", 0, 80)); // NOI18N
+        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel13.setText("Contactos");
+        contactsWindow.getContentPane().add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 420, 60));
+
         jScrollPane1.setViewportView(contactsWindowContacts);
 
-        contactsWindow.getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 70, 420, 470));
+        contactsWindow.getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, 420, 470));
 
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/background.jpg"))); // NOI18N
         contactsWindow.getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 480, 600));
 
-        contactWindow.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        contactWindow.setResizable(false);
-        contactWindow.setSize(new java.awt.Dimension(480, 600));
-        contactWindow.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/background.jpg"))); // NOI18N
-        contactWindow.getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 480, 600));
-
         newModifyContact.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        newModifyContact.setPreferredSize(new java.awt.Dimension(480, 600));
+        newModifyContact.setTitle("Nuevo Contacto");
+        newModifyContact.setLocation(dim.width/2-240, dim.height/2-300);
         newModifyContact.setResizable(false);
         newModifyContact.setSize(new java.awt.Dimension(480, 600));
         newModifyContact.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel6.setText("Nombre");
+
+        jLabel14.setText("Número");
+
+        jLabel15.setText("Imagen");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(41, 41, 41)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel14)
+                    .addComponent(jLabel15))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(newModifyContactName)
+                    .addComponent(newModifyContactNumber)
+                    .addComponent(newModifyContactImage, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE))
+                .addGap(41, 41, 41))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(52, 52, 52)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(newModifyContactName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel14)
+                    .addComponent(newModifyContactNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel15)
+                    .addComponent(newModifyContactImage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(52, Short.MAX_VALUE))
+        );
+
+        newModifyContact.getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 90, 420, 200));
 
         jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/background.jpg"))); // NOI18N
         newModifyContact.getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
         callWindow.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        callWindow.setTitle("Llamada");
+        callWindow.setLocation(dim.width/2-240, dim.height/2-300);
         callWindow.setResizable(false);
         callWindow.setSize(new java.awt.Dimension(480, 600));
         callWindow.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel18.setText("Nombre");
+
+        jLabel19.setText("Número");
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(35, 35, 35)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel18)
+                    .addComponent(jLabel19))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 79, Short.MAX_VALUE)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(callWindowName)
+                    .addComponent(callWindowNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(47, 47, 47))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(callWindowImage, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(134, 134, 134))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addGap(31, 31, 31)
+                .addComponent(callWindowImage, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel18)
+                    .addComponent(callWindowName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel19)
+                    .addComponent(callWindowNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(28, 28, 28))
+        );
+
+        callWindow.getContentPane().add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 420, 300));
 
         jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/background.jpg"))); // NOI18N
         callWindow.getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 480, 600));
 
         videoCallWindow.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        videoCallWindow.setTitle("Video Llamada");
+        videoCallWindow.setLocation(dim.width/2-240, dim.height/2-300);
         videoCallWindow.setResizable(false);
         videoCallWindow.setSize(new java.awt.Dimension(480, 600));
         videoCallWindow.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel16.setText("Nombre");
+
+        jLabel17.setText("Número");
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(35, 35, 35)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel16)
+                    .addComponent(jLabel17))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 79, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(videoCallWindowName)
+                    .addComponent(videoCallWindowNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(47, 47, 47))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(videoCallWindowImage, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(134, 134, 134))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addGap(31, 31, 31)
+                .addComponent(videoCallWindowImage, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel16)
+                    .addComponent(videoCallWindowName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel17)
+                    .addComponent(videoCallWindowNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(28, 28, 28))
+        );
+
+        videoCallWindow.getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 420, 300));
 
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/background.jpg"))); // NOI18N
         videoCallWindow.getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 480, 600));
 
         messageWindow.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        messageWindow.setTitle("Mensaje");
+        messageWindow.setLocation(dim.width/2-240, dim.height/2-300);
         messageWindow.setResizable(false);
         messageWindow.setSize(new java.awt.Dimension(480, 600));
         messageWindow.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -138,7 +324,8 @@ public class Principal extends javax.swing.JFrame {
         jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/background.jpg"))); // NOI18N
         messageWindow.getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 480, 600));
 
-        historyWindow.setPreferredSize(new java.awt.Dimension(480, 600));
+        historyWindow.setTitle("Bitacora");
+        historyWindow.setLocation(dim.width/2+240, dim.height/2-300);
         historyWindow.setResizable(false);
         historyWindow.setSize(new java.awt.Dimension(480, 600));
         historyWindow.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -147,9 +334,9 @@ public class Principal extends javax.swing.JFrame {
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel12.setText("History");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane2.setViewportView(jTextArea1);
+        historyWindowText.setColumns(20);
+        historyWindowText.setRows(5);
+        jScrollPane2.setViewportView(historyWindowText);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -178,6 +365,60 @@ public class Principal extends javax.swing.JFrame {
 
         jLabel11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/background.jpg"))); // NOI18N
         historyWindow.getContentPane().add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 480, 600));
+
+        mailWindow.setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        mailWindow.setLocation(dim.width/2+240, dim.height/2-300);
+        mailWindow.setResizable(false);
+        mailWindow.setSize(new java.awt.Dimension(480, 600));
+        mailWindow.getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        mailWindowBody.setColumns(20);
+        mailWindowBody.setRows(5);
+        jScrollPane3.setViewportView(mailWindowBody);
+
+        mailWindowMails.setColumns(20);
+        mailWindowMails.setRows(5);
+        jScrollPane4.setViewportView(mailWindowMails);
+
+        jLabel21.setText("Mensaje");
+
+        jLabel22.setText("Direcciones");
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel21)
+                            .addComponent(jLabel22))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel22)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel21)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        mailWindow.getContentPane().add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 40, 400, 530));
+
+        jLabel20.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/background.jpg"))); // NOI18N
+        jLabel20.setText("jLabel20");
+        mailWindow.getContentPane().add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 480, 600));
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -246,13 +487,115 @@ public class Principal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void ContactsLabelClickMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ContactsLabelClickMouseClicked
-        this.contactsWindow.setVisible(true);
-        this.mainWindow.setVisible(false);
-    }//GEN-LAST:event_ContactsLabelClickMouseClicked
-
     public void load() {
-        
+        establishConnection();
+        ResultSet ContactsDB = getContacts();
+        try {
+            while (ContactsDB.next()) {
+                this.Contacts.add(new Contact(ContactsDB.getInt(1), ContactsDB.getString(2), ContactsDB.getString(3), ContactsDB.getString(4)));
+            }
+        } catch (Exception e) {
+            System.out.println("Problem when reading Contacts.");
+        }
+        ResultSet UsersDB = getUsers();
+        try {
+            while (UsersDB.next()) {
+                this.Users.add(new User(UsersDB.getInt(1), UsersDB.getString(2), UsersDB.getString(3)));
+            }
+        } catch (Exception e) {
+            System.out.println("Problem when reading Users.");
+        }
+        ResultSet HistoryDB = getHistory();
+        try {
+            while (HistoryDB.next()) {
+                this.History.add(HistoryDB.getString(1));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Problem when reading History");
+        }
+        ResultSet emailDB = getemail();
+        try {
+            while (emailDB.next()) {
+                this.eMail.add(emailDB.getString(1));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Problem when reading Email");
+        }
+    }
+
+    public ResultSet getContacts() {
+        ResultSet rs = null;
+        Statement s = null;
+        try {
+            s = connection.createStatement();
+            rs = s.executeQuery("SELECT * FROM lenguajes.\"Contact\"");
+        } catch (Exception e) {
+            System.out.println("Problem in searching the database Contacts");
+        }
+        return rs;
+    }
+
+    public ResultSet getUsers() {
+        ResultSet rs = null;
+        Statement s = null;
+        try {
+            s = connection.createStatement();
+            rs = s.executeQuery("SELECT * FROM lenguajes.\"User\"");
+        } catch (Exception e) {
+            System.out.println("Problem in searching the database Users");
+        }
+        return rs;
+    }
+
+    public ResultSet getHistory() {
+        ResultSet rs = null;
+        Statement s = null;
+        try {
+            s = connection.createStatement();
+            rs = s.executeQuery("SELECT * FROM lenguajes.\"History\"");
+        } catch (Exception e) {
+            System.out.println("Problem in searching the database History");
+        }
+        return rs;
+    }
+
+    public ResultSet getemail() {
+        ResultSet rs = null;
+        Statement s = null;
+        try {
+            s = connection.createStatement();
+            rs = s.executeQuery("SELECT * FROM lenguajes.\"email\"");
+        } catch (Exception e) {
+            System.out.println("Problem in searching the database email");
+        }
+        return rs;
+    }
+
+    public void establishConnection() {
+        if (connection != null) {
+            return;
+        }
+        String url = "jdbc:postgresql://localhost:5432/basevoz";
+        try {
+            Class.forName("org.postgresql.Driver");
+            connection = DriverManager.getConnection(url, "postgres", "postgres");
+            if (connection != null) {
+                System.out.println("Connecting to database...");
+            }
+        } catch (Exception e) {
+            System.out.println("Problem when connecting to the database 1");
+        }
+    }
+
+    public void closeConnection() {
+        try {
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Problem to close the connection to the database");
+        }
     }
 
     public void usernameFocusCommand() {
@@ -269,46 +612,306 @@ public class Principal extends javax.swing.JFrame {
 
     public void generalListo() {
         if (this.isVisible()) {
-            for (int i = 0; i < this.Users.size(); i++) {
-                if (this.logInPassword.getText().equals(this.Users.get(i).getUsername()) && this.logInPassword.getText().equals(this.Users.get(i).getPassword())) {
+            for (User User : this.Users) {
+                if (this.logInPassword.getText().equals(User.getUsername()) && this.logInPassword.getText().equals(User.getPassword())) {
                     this.mainWindow.setVisible(true);
                     this.setVisible(false);
+                    break;
                 }
             }
         } else if (this.newModifyContact.isVisible()) {
-            
+            if (this.newModifyContactImage.getText().equals("") && this.newModifyContactName.getText().equals("") && this.newModifyContactNumber.getText().equals("")) {
+                Connection c = null;
+                Statement stmt = null;
+                try {
+                    Class.forName("org.postgresql.Driver");
+                    c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/basevoz", "postgres", "postgres");
+                    c.setAutoCommit(false);
+                    System.out.println("Opened database successfully");
+                    int id = this.Contacts.get(this.Contacts.size() - 1).getID() + 1;
+                    String name = this.newModifyContactName.getText();
+                    String number = this.newModifyContactNumber.getText();
+                    String image = this.newModifyContactNumber.getText();
+                    stmt = c.createStatement();
+                    String sql = "\"INSERT INTO lenguajes.\"Contact\"(\"ContactID\", \"ContactName\", \"ContactNumber\", \"ContactImage\") VALUES (\" + id + \", \'" + name + "\', \'" + number + "\', \'" + image + "\')";
+                    stmt.executeUpdate(sql);
+
+                    stmt.close();
+                    c.commit();
+                    c.close();
+                } catch (Exception e) {
+                    System.out.println("Problema al Insertar un Contacto");
+                }
+            }
+        }
+    }
+
+    public void contactDelete() {
+        if (this.contactsWindow.isVisible()) {
+            if (this.contactsWindowContacts.getSelectedIndex() != -1) {
+                this.Contacts.remove(this.contactsWindowContacts.getSelectedIndex());
+                Statement s = null;
+                try {
+                    s = connection.createStatement();
+                    s.executeQuery("DELETE FROM lenguajes.\"Contact\" WHERE <\"ContactID\" = " + this.contactsWindowContacts.getSelectedIndex() + ">");
+                } catch (Exception e) {
+                    System.out.println("Problem in deleting from database Contacts");
+                }
+            }
+        }
+    }
+
+    public void copy(File src, File dst) throws IOException {
+        InputStream in = new FileInputStream(src);
+        try {
+            OutputStream out = new FileOutputStream(dst);
+            try {
+                // Transfer bytes from in to out
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+            } finally {
+                out.close();
+            }
+        } finally {
+            in.close();
         }
     }
 
     public void history() {
         if (this.historyWindow.isVisible()) {
             this.historyWindow.setVisible(false);
+            System.out.println("History Invisible");
         } else {
             this.historyWindow.setVisible(true);
+            System.out.println("History Visible");
         }
     }
 
-    @Override
+    public void appendHistory(String lane) {
+        Connection c = null;
+        Statement stmt = null;
+        try {
+            Class.forName("org.postgresql.Driver");
+            c = DriverManager
+                    .getConnection("jdbc:postgresql://localhost:5432/basevoz",
+                            "postgres", "postgres");
+            c.setAutoCommit(false);
+            stmt = c.createStatement();
+            String sql = "INSERT INTO lenguajes.\"History\"(\"HistoryLine\") VALUES (\'" + lane + "\');";
+            stmt.executeUpdate(sql);
+            System.out.println("Guarda el History");
+            stmt.close();
+            c.commit();
+            c.close();
+        } catch (Exception e) {
+            System.out.println("Problem in inserting to History database");
+        }
+    }
+
     public void setName(String name) {
-        if (this.getFocusOwner() instanceof JTextField) {
-            ((JTextField)this.getFocusOwner()).setText(name);
+        System.out.println(name);
+        if (this.getFocusOwner() instanceof JTextField && this.logInPassword.isFocusOwner() || this.logInUsername.isFocusOwner()) {
+            ((JTextField) this.getFocusOwner()).setText(name);
+        } else if (this.contactsWindow.isVisible() && this.contactsWindowContacts.getModel().getSize() > 0) {
+            name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+            for (int i = 0; i < this.Contacts.size(); i++) {
+                System.out.println(this.Contacts.get(i).getName() + "\t" + name);
+                if (this.Contacts.get(i).getName().equals(name)) {
+                    this.contactsWindowContacts.setSelectedIndex(i);
+                    break;
+                }
+            }
+        } else if (this.newModifyContact.isVisible()) {
+            name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+            this.newModifyContactName.setText(name);
         }
     }
 
     public void openContacts() {
         if (!this.contactsWindow.isVisible()) {
-            DefaultListModel listmodel = new DefaultListModel();
-            for (int i = 0; i < this.Contacts.size(); i++) {
-                listmodel.addElement("Nombre: " + this.Contacts.get(i).getName() + "            Número(" + this.Contacts.get(i).getPhone() + ")");
-            }
-            this.contactsWindowContacts.setModel(listmodel);
+            loadContacts();
             if (this.mainWindow.isVisible()) {
                 this.contactsWindow.setVisible(true);
                 this.mainWindow.setVisible(false);
-            } else if (this.contactWindow.isVisible()) {
+            } else if (this.contactsWindow.isVisible()) {
                 this.contactsWindow.setVisible(true);
-                this.contactWindow.setVisible(false);
+                this.contactsWindow.setVisible(false);
             }
+        }
+    }
+
+    public void loadContacts() {
+        DefaultListModel listmodel = new DefaultListModel();
+        for (Contact Contact : this.Contacts) {
+            listmodel.addElement("Name: " + Contact.getName() + "\tNumber(" + Contact.getPhone() + ")");
+        }
+        this.contactsWindowContacts.setModel(listmodel);
+    }
+
+    public void makeMessage() {
+        if (this.contactsWindowContacts.getSelectedIndex() != -1 && this.contactsWindowContacts.getModel().getSize() > 0 && this.contactsWindow.isVisible()) {
+            
+        }
+    }
+
+    public void sendMessage() {
+        if (this.messageWindow.isVisible()) {
+            
+        }
+    }
+
+    public void mail() {
+        if (this.contactsWindow.isVisible()) {
+            for (int i = 0; i < this.eMail.size(); i++) {
+                this.mailWindowMails.append(this.eMail.get(i) + "\n");
+            }
+            for (int i = 0; i < this.History.size(); i++) {
+                this.mailWindowBody.append(this.History.get(i));
+            }
+            this.mailWindow.setVisible(true);
+            this.contactsWindow.setVisible(false);
+        }
+    }
+
+    public void makeCall() {
+        if (this.contactsWindowContacts.getSelectedIndex() != -1 && this.contactsWindowContacts.getModel().getSize() > 0 && this.contactsWindow.isVisible()) {
+            this.callWindowName.setText(this.Contacts.get(this.contactsWindowContacts.getSelectedIndex()).getName());
+            this.callWindowNumber.setText(this.Contacts.get(this.contactsWindowContacts.getSelectedIndex()).getPhone());
+            ImageIcon icon = new ImageIcon(this.Contacts.get(this.contactsWindowContacts.getSelectedIndex()).getImage());
+            this.callWindowImage.setIcon(icon);
+            this.callWindow.setVisible(true);
+            this.contactsWindow.setVisible(false);
+        }
+    }
+
+    public void makeVideoCall() {
+        if (this.contactsWindowContacts.getSelectedIndex() != -1 && this.contactsWindowContacts.getModel().getSize() > 0 && this.contactsWindow.isVisible()) {
+            this.videoCallWindowName.setText(this.Contacts.get(this.contactsWindowContacts.getSelectedIndex()).getName());
+            this.videoCallWindowNumber.setText(this.Contacts.get(this.contactsWindowContacts.getSelectedIndex()).getPhone());
+            Webcam webcam = Webcam.getDefault();
+            webcam.setViewSize(new Dimension(320, 240));
+            WebcamPanel panel = new WebcamPanel(webcam);
+            panel.setMirrored(true);
+            if (window == null) {
+                window = new JFrame("VideoCall");
+            }
+            window.setLocation(dim.width / 2 - 565, dim.height / 2 - 300);
+            window.add(panel);
+            window.setResizable(true);
+            window.pack();
+            window.setVisible(true);
+            this.videoCallWindow.setVisible(true);
+            this.contactsWindow.setVisible(false);
+        }
+    }
+
+    public void endCall() {
+        if (this.callWindow.isVisible()) {
+            loadContacts();
+            this.contactsWindow.setVisible(true);
+            this.callWindow.setVisible(false);
+        } else if (this.videoCallWindow.isVisible()) {
+            window.setVisible(false);
+            window = null;
+            loadContacts();
+            this.contactsWindow.setVisible(true);
+            this.videoCallWindow.setVisible(false);
+        }
+    }
+
+    public void focusName() {
+        if (this.newModifyContact.isVisible()) {
+            this.newModifyContactName.requestFocusInWindow();
+        }
+    }
+
+    public void focusNumber() {
+        if (this.newModifyContact.isVisible()) {
+            this.newModifyContactNumber.requestFocusInWindow();
+        }
+    }
+
+    public void focusImage() {
+        if (this.newModifyContact.isVisible()) {
+            JFileChooser jfc = new JFileChooser();
+            FileFilter filter = new FileNameExtensionFilter("Imagenes", "png");
+            jfc.setFileFilter(filter);
+            File data = null;
+            int option = jfc.showOpenDialog(this.newModifyContact);
+            if (option == JFileChooser.APPROVE_OPTION) {
+                data = jfc.getSelectedFile();
+                Image image = Toolkit.getDefaultToolkit().createImage(data.getPath()).getScaledInstance(150, 150, 0);
+                this.newModifyContactImage.setText(data.getPath());
+            }
+            this.newModifyContactNumber.requestFocusInWindow();
+        }
+    }
+
+    public void addNumber(String number) {
+        if (this.newModifyContactNumber.isFocusOwner()) {
+            switch (number.toLowerCase()) {
+                case "one": {
+                    this.newModifyContactNumber.setText(this.newModifyContactNumber.getText() + 1);
+                    break;
+                }
+                case "two": {
+                    this.newModifyContactNumber.setText(this.newModifyContactNumber.getText() + 2);
+                    break;
+                }
+                case "three": {
+                    this.newModifyContactNumber.setText(this.newModifyContactNumber.getText() + 3);
+                    break;
+                }
+                case "four": {
+                    this.newModifyContactNumber.setText(this.newModifyContactNumber.getText() + 4);
+                    break;
+                }
+                case "five": {
+                    this.newModifyContactNumber.setText(this.newModifyContactNumber.getText() + 5);
+                    break;
+                }
+                case "six": {
+                    this.newModifyContactNumber.setText(this.newModifyContactNumber.getText() + 6);
+                    break;
+                }
+                case "seven": {
+                    this.newModifyContactNumber.setText(this.newModifyContactNumber.getText() + 7);
+                    break;
+                }
+                case "eight": {
+                    this.newModifyContactNumber.setText(this.newModifyContactNumber.getText() + 8);
+                    break;
+                }
+                case "nine": {
+                    this.newModifyContactNumber.setText(this.newModifyContactNumber.getText() + 9);
+                    break;
+                }
+                case "zero": {
+                    this.newModifyContactNumber.setText(this.newModifyContactNumber.getText() + 0);
+                    break;
+                }
+            }
+        }
+    }
+
+    public void back() {
+        if (this.mainWindow.isVisible()) {
+            this.setVisible(true);
+            this.mainWindow.setVisible(false);
+        } else if (this.contactsWindow.isVisible()) {
+            this.mainWindow.setVisible(true);
+            this.contactsWindow.setVisible(false);
+        } else if (this.newModifyContact.isVisible()) {
+            openContacts();
+            this.contactsWindow.setVisible(true);
+            this.newModifyContact.setVisible(false);
+        } else if (this.mailWindow.isVisible()) {
+            openContacts();
+            this.contactsWindow.setVisible(true);
+            this.mailWindow.setVisible(false);
         }
     }
 
@@ -330,7 +933,7 @@ public class Principal extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -358,16 +961,29 @@ public class Principal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel ContactsLabelClick;
     private javax.swing.JDialog callWindow;
-    private javax.swing.JDialog contactWindow;
+    private javax.swing.JLabel callWindowImage;
+    private javax.swing.JTextField callWindowName;
+    private javax.swing.JTextField callWindowNumber;
     private javax.swing.JDialog contactsWindow;
     private javax.swing.JList contactsWindowContacts;
     private javax.swing.JDialog historyWindow;
+    private javax.swing.JTextArea historyWindowText;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -377,14 +993,28 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTextField logInPassword;
     private javax.swing.JTextField logInUsername;
+    private javax.swing.JDialog mailWindow;
+    private javax.swing.JTextArea mailWindowBody;
+    private javax.swing.JTextArea mailWindowMails;
     private javax.swing.JDialog mainWindow;
     private javax.swing.JDialog messageWindow;
     private javax.swing.JDialog newModifyContact;
+    private javax.swing.JTextField newModifyContactImage;
+    private javax.swing.JTextField newModifyContactName;
+    private javax.swing.JTextField newModifyContactNumber;
     private javax.swing.JDialog videoCallWindow;
+    private javax.swing.JLabel videoCallWindowImage;
+    private javax.swing.JTextField videoCallWindowName;
+    private javax.swing.JTextField videoCallWindowNumber;
     // End of variables declaration//GEN-END:variables
 }

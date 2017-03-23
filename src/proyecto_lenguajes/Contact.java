@@ -9,10 +9,9 @@ import javax.swing.ImageIcon;
 public class Contact {
 
     int ID;
-    String Name, Phone;
-    ImageIcon Image;
+    String Name, Phone, Image;
 
-    public Contact(int ID, String Name, String Phone, ImageIcon Image) {
+    public Contact(int ID, String Name, String Phone, String Image) {
         this.ID = ID;
         this.Name = Name;
         this.Phone = Phone;
@@ -43,11 +42,16 @@ public class Contact {
         this.Phone = Phone;
     }
 
-    public ImageIcon getImage() {
+    public String getImage() {
         return Image;
     }
 
-    public void setImage(ImageIcon Image) {
+    public void setImage(String Image) {
         this.Image = Image;
+    }
+
+    @Override
+    public String toString() {
+        return "id: " + ID + ", Name: " + Name + ", Phone: " + Phone + ", Image: " + Image;
     }
 }

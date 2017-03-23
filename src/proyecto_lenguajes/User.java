@@ -38,4 +38,9 @@ public class User {
     public void setPassword(String Password) {
         this.Password = Password;
     }
+
+    @Override
+    public String toString() {
+        return "id: " + ID + ", Username: " + Username + ", Password: " + Password;
+    }
 }
